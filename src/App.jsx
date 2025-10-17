@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const API_URL = 'https://твой-бекенд.vercel.app';
+const API_URL = 'https://uim-backend.vercel.app';
 
 function App() {
   const [backendMessage, setBackendMessage] = useState('');
