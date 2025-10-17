@@ -8,35 +8,97 @@ function App() {
   const [value, setValue] = useState('8');
   const [telegramUser, setTelegramUser] = useState(null);
 
+  // Состояния для регистрации/логина
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [isLogin, setIsLogin] = useState(true);
+
   // Инициализация Telegram Web App
   useEffect(() => {
     if (window.Telegram?.WebApp) {
       const tg = window.Telegram.WebApp;
-
-      // Расширяем на весь экран
       tg.expand();
 
-      // Получаем данные пользователя Telegram
       const user = tg.initDataUnsafe?.user;
       if (user) {
         setTelegramUser(user);
-
-        // Автоматическая "регистрация" через Telegram
-        const telegramId = `tg_${user.id}`;
-        setUser({
-          id: telegramId,
-          email: `tg_${user.id}@telegram.org`,
-          name: user.first_name || 'Telegram User',
-        });
+        // Автозаполнение email для Telegram пользователя
+        setEmail(`tg_${user.id}@telegram.org`);
+        setName(user.first_name || '');
       }
-
-      // Меняем цвет фона Telegram
-      tg.setBackgroundColor('#2c2c2c');
     }
   }, []);
 
+  // Регистрация
+  const handleRegister = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          name,
+        }),
+      });
+      const result = await response.json();
+
+      if (result.success) {
+        showTelegramAlert('✅ Регистрация успешна! Теперь войдите.');
+        setIsLogin(true);
+        setEmail('');
+        setPassword('');
+        setName('');
+      } else {
+        showTelegramAlert(`❌ Ошибка: ${result.error}`);
+      }
+    } catch (error) {
+      showTelegramAlert(`❌ Ошибка: ${error.message}`);
+    }
+  };
+
+  // Логин
+  const handleLogin = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+      const result = await response.json();
+
+      if (result.success) {
+        setUser(result.user);
+        showTelegramAlert(`✅ Добро пожаловать, ${result.user.email}!`);
+        setEmail('');
+        setPassword('');
+      } else {
+        showTelegramAlert(`❌ Ошибка: ${result.error}`);
+      }
+    } catch (error) {
+      showTelegramAlert(`❌ Ошибка: ${error.message}`);
+    }
+  };
+
+  // Выход
+  const handleLogout = () => {
+    setUser(null);
+    showTelegramAlert('👋 Вы вышли из системы');
+  };
+
   const trackActivity = async () => {
-    if (!user) return;
+    if (!user) {
+      showTelegramAlert('⚠️ Сначала войдите в систему');
+      return;
+    }
 
     try {
       const response = await fetch(`${API_URL}/api/track`, {
@@ -48,45 +110,45 @@ function App() {
           activity,
           value: parseInt(value),
           user_id: user.id,
-          source: 'telegram',
         }),
       });
-
       const result = await response.json();
 
       if (result.success) {
-        // Показываем уведомление в Telegram
-        if (window.Telegram?.WebApp) {
-          window.Telegram.WebApp.showPopup({
-            title: '✅ Успех!',
-            message: `Активность "${activity}" записана: ${value} часов`,
-          });
-        } else {
-          alert(`✅ Записано: ${activity} - ${value} часов`);
-        }
+        showTelegramAlert(`✅ Отправлено: ${activity} - ${value} часов`);
+      } else {
+        showTelegramAlert(`❌ Ошибка: ${result.error}`);
       }
     } catch (error) {
-      alert(`❌ Ошибка: ${error.message}`);
+      showTelegramAlert(`❌ Ошибка отправки: ${error.message}`);
     }
   };
 
+  // Получить статистику
   const getStats = async () => {
-    if (!user) return;
+    if (!user) {
+      showTelegramAlert('⚠️ Сначала войдите в систему');
+      return;
+    }
 
     try {
       const response = await fetch(`${API_URL}/api/stats/${user.id}`);
       const result = await response.json();
-
-      if (window.Telegram?.WebApp) {
-        window.Telegram.WebApp.showPopup({
-          title: '📊 Статистика',
-          message: `У вас ${result.total_entries} записей`,
-        });
-      } else {
-        alert(`📊 Статистика: ${result.total_entries} записей`);
-      }
+      showTelegramAlert(`📊 Ваша статистика: ${result.total_entries} записей`);
     } catch (error) {
-      alert(`❌ Ошибка: ${error.message}`);
+      showTelegramAlert(`❌ Ошибка загрузки статистики: ${error.message}`);
+    }
+  };
+
+  // Универсальное уведомление для Telegram и браузера
+  const showTelegramAlert = (message) => {
+    if (window.Telegram?.WebApp) {
+      window.Telegram.WebApp.showPopup({
+        title: 'Life Tracker',
+        message: message,
+      });
+    } else {
+      alert(message);
     }
   };
 
@@ -118,6 +180,12 @@ function App() {
       background: 'var(--tg-theme-bg-color, #ffffff)',
       color: 'var(--tg-theme-text-color, #000000)',
     },
+    section: {
+      border: '1px solid var(--tg-theme-section-border-color, #e0e0e0)',
+      padding: '15px',
+      borderRadius: '10px',
+      marginBottom: '15px',
+    },
   };
 
   return (
@@ -126,49 +194,123 @@ function App() {
 
       {telegramUser && (
         <div
-          style={{
-            marginBottom: '15px',
-            padding: '10px',
-            background: 'var(--tg-theme-secondary-bg-color, #f0f0f0)',
-            borderRadius: '10px',
-          }}>
+          style={{ ...styles.section, background: 'var(--tg-theme-secondary-bg-color, #f0f0f0)' }}>
           👋 Привет, {telegramUser.first_name}!
         </div>
       )}
 
-      <div style={{ marginBottom: '20px' }}>
-        <h3>📊 Трекер активности</h3>
+      {/* Блок авторизации */}
+      <div style={styles.section}>
+        <h3>{user ? `👤 ${user.email}` : '🔐 Авторизация'}</h3>
 
-        <select value={activity} onChange={(e) => setActivity(e.target.value)} style={styles.input}>
-          <option value="sleep">💤 Сон</option>
-          <option value="work">💼 Работа</option>
-          <option value="sport">🏃 Спорт</option>
-          <option value="study">📚 Учеба</option>
-          <option value="reading">📖 Чтение</option>
-        </select>
+        {user ? (
+          <div>
+            <p>✅ Вы вошли как: {user.email}</p>
+            <button
+              onClick={handleLogout}
+              style={{
+                ...styles.button,
+                background: 'var(--tg-theme-destructive-text-color, #ff3b30)',
+              }}>
+              Выйти
+            </button>
+            <button
+              onClick={getStats}
+              style={{
+                ...styles.button,
+                background: 'var(--tg-theme-secondary-bg-color, #f0f0f0)',
+                color: 'var(--tg-theme-text-color, #000000)',
+              }}>
+              📊 Моя статистика
+            </button>
+          </div>
+        ) : (
+          <div>
+            <div style={{ marginBottom: '10px' }}>
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                style={styles.input}
+              />
+            </div>
 
-        <input
-          type="number"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          placeholder="Часы"
-          style={styles.input}
-        />
+            <div style={{ marginBottom: '10px' }}>
+              <input
+                type="password"
+                placeholder="Пароль"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                style={styles.input}
+              />
+            </div>
 
-        <button onClick={trackActivity} style={styles.button}>
-          📝 Записать активность
-        </button>
+            {!isLogin && (
+              <div style={{ marginBottom: '10px' }}>
+                <input
+                  type="text"
+                  placeholder="Имя (опционально)"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  style={styles.input}
+                />
+              </div>
+            )}
 
-        <button
-          onClick={getStats}
-          style={{
-            ...styles.button,
-            background: 'var(--tg-theme-secondary-bg-color, #f0f0f0)',
-            color: 'var(--tg-theme-text-color, #000000)',
-          }}>
-          📈 Моя статистика
-        </button>
+            <div>
+              <button onClick={isLogin ? handleLogin : handleRegister} style={styles.button}>
+                {isLogin ? 'Войти' : 'Зарегистрироваться'}
+              </button>
+
+              <button
+                onClick={() => setIsLogin(!isLogin)}
+                style={{
+                  ...styles.button,
+                  background: 'transparent',
+                  color: 'var(--tg-theme-link-color, #2481cc)',
+                }}>
+                {isLogin ? 'Нет аккаунта? Регистрация' : 'Есть аккаунт? Войти'}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
+
+      {/* Трекер активности */}
+      {user && (
+        <div style={styles.section}>
+          <h3>📊 Трекер активности</h3>
+
+          <div style={{ marginBottom: '10px' }}>
+            <label>Активность: </label>
+            <select
+              value={activity}
+              onChange={(e) => setActivity(e.target.value)}
+              style={styles.input}>
+              <option value="sleep">💤 Сон</option>
+              <option value="work">💼 Работа</option>
+              <option value="sport">🏃 Спорт</option>
+              <option value="study">📚 Учеба</option>
+              <option value="reading">📖 Чтение</option>
+            </select>
+          </div>
+
+          <div style={{ marginBottom: '10px' }}>
+            <label>Часы: </label>
+            <input
+              type="number"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              style={styles.input}
+            />
+          </div>
+
+          <button onClick={trackActivity} style={styles.button}>
+            📝 Записать активность
+          </button>
+        </div>
+      )}
     </div>
   );
 }
