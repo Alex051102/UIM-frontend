@@ -1,98 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const API_URL = 'https://uim-backend.vercel.app';
 
 function App() {
-  const [backendMessage, setBackendMessage] = useState('');
+  const [user, setUser] = useState(null);
   const [activity, setActivity] = useState('sleep');
   const [value, setValue] = useState('8');
-  const [user, setUser] = useState(null);
+  const [telegramUser, setTelegramUser] = useState(null);
 
-  // Состояния для регистрации/логина
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [isLogin, setIsLogin] = useState(true);
-
-  const testBackend = async () => {
-    try {
-      const response = await fetch(`${API_URL}/api/test`);
-      const result = await response.json();
-      setBackendMessage(`✅ Бекенд работает: ${result.message}`);
-    } catch (error) {
-      setBackendMessage(`❌ Ошибка бекенда: ${error.message}`);
-    }
-  };
-
-  // Регистрация
-  const handleRegister = async () => {
-    try {
-      const response = await fetch(`${API_URL}/api/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          password,
-          name,
-        }),
-      });
-      const result = await response.json();
-
-      if (result.success) {
-        alert('✅ Регистрация успешна! Теперь войдите.');
-        setIsLogin(true);
-        setEmail('');
-        setPassword('');
-        setName('');
-      } else {
-        alert(`❌ Ошибка: ${result.error}`);
+  // Инициализация Telegram Web App
+  useEffect(() => {
+    if (window.Telegram?.WebApp) {
+      const tg = window.Telegram.WebApp;
+      
+      // Расширяем на весь экран
+      tg.expand();
+      
+      // Получаем данные пользователя Telegram
+      const user = tg.initDataUnsafe?.user;
+      if (user) {
+        setTelegramUser(user);
+        
+        // Автоматическая "регистрация" через Telegram
+        const telegramId = `tg_${user.id}`;
+        setUser({
+          id: telegramId,
+          email: `tg_${user.id}@telegram.org`,
+          name: user.first_name || 'Telegram User'
+        });
       }
-    } catch (error) {
-      alert(`❌ Ошибка: ${error.message}`);
+      
+      // Меняем цвет фона Telegram
+      tg.setBackgroundColor('#2c2c2c');
     }
-  };
-
-  // Логин
-  const handleLogin = async () => {
-    try {
-      const response = await fetch(`${API_URL}/api/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
-      const result = await response.json();
-
-      if (result.success) {
-        setUser(result.user);
-        alert(`✅ Добро пожаловать, ${result.user.email}!`);
-        setEmail('');
-        setPassword('');
-      } else {
-        alert(`❌ Ошибка: ${result.error}`);
-      }
-    } catch (error) {
-      alert(`❌ Ошибка: ${error.message}`);
-    }
-  };
-
-  // Выход
-  const handleLogout = () => {
-    setUser(null);
-    alert('👋 Вы вышли из системы');
-  };
+  }, []);
 
   const trackActivity = async () => {
-    if (!user) {
-      alert('⚠️ Сначала войдите в систему');
-      return;
-    }
+    if (!user) return;
 
     try {
       const response = await fetch(`${API_URL}/api/track`, {
@@ -104,152 +48,126 @@ function App() {
           activity,
           value: parseInt(value),
           user_id: user.id,
+          source: 'telegram'
         }),
       });
+      
       const result = await response.json();
-
+      
       if (result.success) {
-        alert(`✅ Отправлено: ${activity} - ${value} часов\nОтвет: ${result.message}`);
-      } else {
-        alert(`❌ Ошибка: ${result.error}`);
+        // Показываем уведомление в Telegram
+        if (window.Telegram?.WebApp) {
+          window.Telegram.WebApp.showPopup({
+            title: '✅ Успех!',
+            message: `Активность "${activity}" записана: ${value} часов`
+          });
+        } else {
+          alert(`✅ Записано: ${activity} - ${value} часов`);
+        }
       }
     } catch (error) {
-      alert(`❌ Ошибка отправки: ${error.message}`);
+      alert(`❌ Ошибка: ${error.message}`);
     }
   };
 
-  // Получить статистику
   const getStats = async () => {
-    if (!user) {
-      alert('⚠️ Сначала войдите в систему');
-      return;
-    }
+    if (!user) return;
 
     try {
       const response = await fetch(`${API_URL}/api/stats/${user.id}`);
       const result = await response.json();
-      alert(`📊 Ваша статистика: ${result.total_entries} записей`);
+      
+      if (window.Telegram?.WebApp) {
+        window.Telegram.WebApp.showPopup({
+          title: '📊 Статистика',
+          message: `У вас ${result.total_entries} записей`
+        });
+      } else {
+        alert(`📊 Статистика: ${result.total_entries} записей`);
+      }
     } catch (error) {
-      alert(`❌ Ошибка загрузки статистики: ${error.message}`);
+      alert(`❌ Ошибка: ${error.message}`);
+    }
+  };
+
+  // Стили для Telegram Mini App
+  const styles = {
+    container: {
+      padding: '15px',
+      fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
+      background: 'var(--tg-theme-bg-color, #ffffff)',
+      color: 'var(--tg-theme-text-color, #000000)',
+      minHeight: '100vh'
+    },
+    button: {
+      padding: '12px 16px',
+      background: 'var(--tg-theme-button-color, #2481cc)',
+      color: 'var(--tg-theme-button-text-color, #ffffff)',
+      border: 'none',
+      borderRadius: '10px',
+      margin: '5px',
+      width: '100%',
+      fontSize: '16px'
+    },
+    input: {
+      padding: '12px',
+      border: '1px solid var(--tg-theme-hint-color, #999999)',
+      borderRadius: '10px',
+      margin: '5px 0',
+      width: '100%',
+      background: 'var(--tg-theme-bg-color, #ffffff)',
+      color: 'var(--tg-theme-text-color, #000000)'
     }
   };
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial' }}>
+    <div style={styles.container}>
       <h1>🧠 Life Tracker</h1>
+      
+      {telegramUser && (
+        <div style={{marginBottom: '15px', padding: '10px', background: 'var(--tg-theme-secondary-bg-color, #f0f0f0)', borderRadius: '10px'}}>
+          👋 Привет, {telegramUser.first_name}!
+        </div>
+      )}
 
-      {/* Тест бекенда */}
-      <div style={{ marginBottom: '20px' }}>
-        <button onClick={testBackend} style={{ padding: '10px', margin: '5px' }}>
-          Тест бекенда
+      <div style={{marginBottom: '20px'}}>
+        <h3>📊 Трекер активности</h3>
+        
+        <select 
+          value={activity} 
+          onChange={(e) => setActivity(e.target.value)}
+          style={styles.input}
+        >
+          <option value="sleep">💤 Сон</option>
+          <option value="work">💼 Работа</option>
+          <option value="sport">🏃 Спорт</option>
+          <option value="study">📚 Учеба</option>
+          <option value="reading">📖 Чтение</option>
+        </select>
+
+        <input
+          type="number"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Часы"
+          style={styles.input}
+        />
+
+        <button onClick={trackActivity} style={styles.button}>
+          📝 Записать активность
         </button>
-        <div>{backendMessage}</div>
-      </div>
-
-      {/* Блок авторизации */}
-      <div
-        style={{
-          border: '1px solid #ccc',
-          padding: '15px',
-          borderRadius: '5px',
-          marginBottom: '20px',
-        }}>
-        <h3>{user ? `👤 ${user.email}` : '🔐 Авторизация'}</h3>
-
-        {user ? (
-          <div>
-            <p>✅ Вы вошли как: {user.email}</p>
-            <button onClick={handleLogout} style={{ padding: '8px 15px', margin: '5px' }}>
-              Выйти
-            </button>
-            <button onClick={getStats} style={{ padding: '8px 15px', margin: '5px' }}>
-              📊 Моя статистика
-            </button>
-          </div>
-        ) : (
-          <div>
-            <div style={{ marginBottom: '10px' }}>
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                style={{ padding: '8px', margin: '5px', width: '200px' }}
-              />
-            </div>
-
-            <div style={{ marginBottom: '10px' }}>
-              <input
-                type="password"
-                placeholder="Пароль"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                style={{ padding: '8px', margin: '5px', width: '200px' }}
-              />
-            </div>
-
-            {!isLogin && (
-              <div style={{ marginBottom: '10px' }}>
-                <input
-                  type="text"
-                  placeholder="Имя (опционально)"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  style={{ padding: '8px', margin: '5px', width: '200px' }}
-                />
-              </div>
-            )}
-
-            <div>
-              <button
-                onClick={isLogin ? handleLogin : handleRegister}
-                style={{ padding: '10px 15px', margin: '5px' }}>
-                {isLogin ? 'Войти' : 'Зарегистрироваться'}
-              </button>
-
-              <button
-                onClick={() => setIsLogin(!isLogin)}
-                style={{ padding: '8px 12px', margin: '5px', background: 'transparent' }}>
-                {isLogin ? 'Нет аккаунта? Регистрация' : 'Есть аккаунт? Войти'}
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Трекер активности */}
-      <div style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '5px' }}>
-        <h3>📊 Трекер активности {user && '✅'}</h3>
-
-        <div style={{ marginBottom: '10px' }}>
-          <label>Активность: </label>
-          <select value={activity} onChange={(e) => setActivity(e.target.value)}>
-            <option value="sleep">Сон</option>
-            <option value="work">Работа</option>
-            <option value="sport">Спорт</option>
-            <option value="study">Учеба</option>
-            <option value="reading">Чтение</option>
-          </select>
-        </div>
-
-        <div style={{ marginBottom: '10px' }}>
-          <label>Часы: </label>
-          <input
-            type="number"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            style={{ width: '60px' }}
-          />
-        </div>
-
-        <button onClick={trackActivity} style={{ padding: '10px 15px' }} disabled={!user}>
-          {user ? '📝 Записать активность' : '⚠️ Сначала войдите'}
+        
+        <button onClick={getStats} style={{...styles.button, background: 'var(--tg-theme-secondary-bg-color, #f0f0f0)', color: 'var(--tg-theme-text-color, #000000)'}}>
+          📈 Моя статистика
         </button>
       </div>
 
-      <div style={{ marginTop: '20px', fontSize: '12px', color: '#666' }}>
-        ⚠️ Не забудь заменить API_URL в коде на свой бекенд URL
-      </div>
+      {/* Для отладки - показываем инфо о пользователе */}
+      {process.env.NODE_ENV === 'development' && telegramUser && (
+        <div style={{fontSize: '12px', color: '#666', marginTop: '20px'}}>
+          Debug: User ID: {telegramUser.id}
+        </div>
+      )}
     </div>
   );
 }
