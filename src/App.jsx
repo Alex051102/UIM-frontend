@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-const API_URL = 'https://uim-backend.vercel.app';
+// Автоматическое определение API_URL для localhost и Vercel
+const API_URL =
+  window.location.hostname === 'localhost'
+    ? 'http://localhost:3001'
+    : 'https://uim-backend.vercel.app';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -14,8 +18,15 @@ function App() {
   const [name, setName] = useState('');
   const [isLogin, setIsLogin] = useState(true);
 
-  // Инициализация Telegram Web App
+  // ✅ ДОБАВЛЯЕМ LOCALSTORAGE ДЛЯ СОХРАНЕНИЯ
   useEffect(() => {
+    // Проверяем сохраненного пользователя при загрузке
+    const savedUser = localStorage.getItem('lifeTrackerUser');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+
+    // Инициализация Telegram Web App
     if (window.Telegram?.WebApp) {
       const tg = window.Telegram.WebApp;
       tg.expand();
@@ -29,6 +40,18 @@ function App() {
       }
     }
   }, []);
+
+  // Функция для сохранения пользователя
+  const saveUserToStorage = (userData) => {
+    localStorage.setItem('lifeTrackerUser', JSON.stringify(userData));
+    setUser(userData);
+  };
+
+  // Функция для удаления пользователя
+  const removeUserFromStorage = () => {
+    localStorage.removeItem('lifeTrackerUser');
+    setUser(null);
+  };
 
   // Регистрация
   const handleRegister = async () => {
@@ -47,7 +70,9 @@ function App() {
       const result = await response.json();
 
       if (result.success) {
-        showTelegramAlert('✅ Регистрация успешна! Теперь войдите.');
+        // ✅ СОХРАНЯЕМ ПОЛЬЗОВАТЕЛЯ В LOCALSTORAGE
+        saveUserToStorage(result.user);
+        showTelegramAlert('✅ Регистрация успешна!');
         setIsLogin(true);
         setEmail('');
         setPassword('');
@@ -76,7 +101,8 @@ function App() {
       const result = await response.json();
 
       if (result.success) {
-        setUser(result.user);
+        // ✅ СОХРАНЯЕМ ПОЛЬЗОВАТЕЛЯ В LOCALSTORAGE
+        saveUserToStorage(result.user);
         showTelegramAlert(`✅ Добро пожаловать, ${result.user.email}!`);
         setEmail('');
         setPassword('');
@@ -90,7 +116,8 @@ function App() {
 
   // Выход
   const handleLogout = () => {
-    setUser(null);
+    // ✅ УДАЛЯЕМ ПОЛЬЗОВАТЕЛЯ ИЗ LOCALSTORAGE
+    removeUserFromStorage();
     showTelegramAlert('👋 Вы вышли из системы');
   };
 
