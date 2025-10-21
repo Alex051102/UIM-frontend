@@ -41,7 +41,7 @@ function App() {
       {auth ? (
         <>
           <button onClick={removeUserFromStorage}>выйти</button>
-          <p>LK</p>
+          <p>Привет Леха</p>
         </>
       ) : (
         <AuthStart onLoginSuccess={() => setAuth(true)} />
