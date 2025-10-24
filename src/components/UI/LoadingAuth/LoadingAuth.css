@@ -1,0 +1,53 @@
+.loading-auth{
+    background-color: #232323;
+    height: 100vh; 
+    width: 100vw;
+    max-width: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.loading-auth__container{
+    padding: 80px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+.loading-auth__logo{
+   
+    height: 50px;
+}
+.loading-auth__info{
+     display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.loading-auth__info-main{
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.loading-auth__info-text--green{
+    font-size: 44px;
+    color: #F5FF82;
+    text-align: center;
+}
+.loading-auth__info-text--big{
+    font-size: 32px;
+    color:#EEEEEE;
+    text-align: center;
+}
+.loading-auth__info-stages{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.loading-auth__info-stage{
+    color: rgb(255,255,255,0.5);
+    text-align: center;
+    font-size: 18px;
+}
+.loading-auth__info-stage--active{
+    color: #F5FF82;
+}

@@ -3,7 +3,8 @@ import Login from '../Login/Login';
 import Register from '../Register/Register';
 import AuthChoose from '../AuthChoose/AuthChoose';
 import QuestionaryStart from '../../Questionary/QuestionaryStart/QuestionaryStart';
-import registerWithSurvey from '../../../services/api/register';
+
+import LoadingAuth from '../../UI/LoadingAuth/LoadingAuth';
 export default function AuthStart() {
   const [page, setPage] = useState('choose');
 
@@ -23,15 +24,18 @@ export default function AuthStart() {
 
     if (allFieldsFilled) {
       console.log('✅ Все поля заполнены! Автоматически регистрируем...');
-
-      registerWithSurvey(results);
+      setPage('loading');
+      /*  registerWithSurvey(results); */
     }
   }, [results]);
 
   console.log(results);
   function renderPage() {
+    if (page == 'loading') {
+      return <LoadingAuth results={results}></LoadingAuth>;
+    }
     if (page == 'login') {
-      return <Login></Login>;
+      return <Login pager={pager}></Login>;
     }
     if (page == 'register') {
       return <Register addInfo={addInfo} pager={pager}></Register>;
@@ -44,5 +48,5 @@ export default function AuthStart() {
     }
   }
 
-  return <div>{renderPage()}</div>;
+  return <div style={{ width: '100%' }}>{renderPage()}</div>;
 }

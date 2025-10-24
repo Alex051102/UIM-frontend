@@ -38,14 +38,16 @@ function App() {
 
   return (
     <>
-      {auth ? (
-        <>
-          <button onClick={removeUserFromStorage}>выйти</button>
-          <p>LK</p>
-        </>
-      ) : (
-        <AuthStart onLoginSuccess={() => setAuth(true)} />
-      )}
+      <div style={{ maxWidth: '500px', overflow: 'visible' }} className="app">
+        {auth ? (
+          <>
+            <button onClick={removeUserFromStorage}>выйти</button>
+            <p>LK</p>
+          </>
+        ) : (
+          <AuthStart onLoginSuccess={() => setAuth(true)} />
+        )}
+      </div>
     </>
   );
 }

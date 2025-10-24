@@ -1,0 +1,145 @@
+.register{
+    display: flex;
+    height: 100vh; 
+    width: 100%;
+}
+
+.register__container{
+    padding: 80px 30px;
+  
+    display: grid;
+    gap: 10px;
+   justify-content: center;
+    width: 100%; 
+    grid-template-rows: 20px 1fr 20px;
+}
+.register__text{
+    text-align: center;
+    font-size: 22px;
+    color: white;
+}
+.register__main{
+    height: 100%; 
+    display: flex;
+    align-items: center;
+}
+.register__main-content{
+  background: rgba(255, 255, 255, 0.4);  border-radius: 20px;backdrop-filter: blur(15px);
+}
+
+.register__main-content-info{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.register__main-content-container{
+    padding: 35px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+.register__main-content-nav{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+.register__main-content-nav-swape{
+    display: flex;
+    justify-content: end;
+}
+.register__main-content-nav-swape-text{
+    color: rgb(255, 255, 255,0.5);
+    font-size: 12px;
+    text-decoration: underline;
+}
+.register__main-content-nav-img img{
+    width: 100px;
+    height: 30px;
+}
+
+.register__main-content-questions{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.register__main-content-questions-title{
+    font-size: 37px;
+}
+.cirlce{
+    width: 45px;
+    height: 45px;
+    background-color: white;
+    border-radius: 50%;
+}
+.register__main-content-input-outer{
+    padding: 5px;
+    display: grid;
+    gap: 5px;
+    grid-template-columns: 50px 1fr;
+    background-color: rgb(255, 255, 255, 0.5);
+    border-radius: 20px;
+    align-items: center;
+    height: 50px;
+}
+.register__main-content-input-outer--forgot{
+     grid-template-columns: 50px 1fr 85px;
+}
+.register__main-content-input{
+    border: none;
+    background: transparent; 
+    border-radius: 0 20px 20px 0; 
+    width: 30vw;
+    max-width: 200px;
+    
+}
+.register__main-content-input:focus{
+    outline: none;
+}
+
+.register__main-content-input-forgot{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 35px;
+    border-radius:30px;
+    background-color: white;
+}
+.register__main-content-input-forgot-text{
+    font-size: 13px;
+}
+.register__main-content-next{
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+.register__main-content-next-text{
+    font-size: 8px;
+   color: rgb(255, 255, 255,0.5);
+}
+.register__main-content-next-button{
+    width: 73px;
+    height: 60px;
+}
+.register__main-content-details{
+    font-size: 12px;
+    text-align: center;
+}
+
+@media(max-width:480px){
+    .register__main-content-container{
+    padding: 20px;
+}
+.register__main-content-input{
+   
+    width: 38vw;
+    max-width: 200px;
+    
+}
+
+}
+@media(max-width:420px){
+    .register__container{
+    padding: 80px 20px;
+}
+
+}

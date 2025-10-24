@@ -1,0 +1,140 @@
+.login{
+    display: flex;
+    height: 100vh; 
+    width: 100%;
+}
+
+.login__container{
+    padding: 80px 30px;
+  
+    display: grid;
+    gap: 10px;
+   justify-content: center;
+    width: 100%; 
+    grid-template-rows: 20px 1fr 20px;
+}
+.login__text{
+    text-align: center;
+    font-size: 22px;
+    color: white;
+}
+.login__main{
+    height: 100%; 
+    display: flex;
+    align-items: center;
+}
+.login__main-content{
+  background: rgba(255, 255, 255, 0.4);  border-radius: 20px;backdrop-filter: blur(15px);
+}
+
+.login__main-content-info{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.login__main-content-container{
+    padding: 35px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+.login__main-content-nav{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+.login__main-content-nav-swape{
+    display: flex;
+    justify-content: end;
+}
+.login__main-content-nav-swape-text{
+    color: rgb(255, 255, 255,0.5);
+    font-size: 12px;
+    text-decoration: underline;
+}
+.login__main-content-nav-img img{
+    width: 100px;
+    height: 30px;
+}
+
+.login__main-content-questions{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.login__main-content-questions-title{
+    font-size: 37px;
+}
+.cirlce{
+    width: 45px;
+    height: 45px;
+    background-color: white;
+    border-radius: 50%;
+}
+.login__main-content-input-outer{
+    padding: 5px;
+    display: grid;
+    gap: 5px;
+    grid-template-columns: 50px 1fr;
+    background-color: rgb(255, 255, 255, 0.5);
+    border-radius: 20px;
+    align-items: center;
+    height: 50px;
+}
+.login__main-content-input-outer--forgot{
+     grid-template-columns: 50px 1fr 85px;
+}
+.login__main-content-input{
+    border: none;
+    background: transparent; 
+    border-radius: 0 20px 20px 0; 
+    width: 27vw;
+    max-width: 200px;
+    
+}
+.login__main-content-input:focus{
+    outline: none;
+}
+
+.login__main-content-input-forgot{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 35px;
+    border-radius:30px;
+    background-color: white;
+}
+.login__main-content-input-forgot-text{
+    font-size: 13px;
+}
+.login__main-content-next{
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+.login__main-content-next-text{
+    font-size: 8px;
+   color: rgb(255, 255, 255,0.5);
+}
+.login__main-content-next-button{
+    width: 73px;
+    height: 60px;
+}
+.login__main-content-details{
+    font-size: 12px;
+    text-align: center;
+}
+
+@media(max-width:480px){
+    .login__main-content-container{
+    padding: 20px;
+   
+}
+
+}
+@media(max-width:420px){
+    .login__container{
+    padding: 80px 20px;
+}
+
+}

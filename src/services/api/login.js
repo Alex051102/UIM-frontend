@@ -1,4 +1,5 @@
-// Чистая функция для входа в систему
+import showAlert from '../showAlert';
+
 const login = async (email, password) => {
   try {
     if (!email || !password) {
@@ -26,10 +27,10 @@ const login = async (email, password) => {
     const result = await response.json();
 
     if (!result.success) {
+      showAlert('Ошибка входа');
       throw new Error(result.error || 'Ошибка входа');
     }
 
-    // Сохраняем пользователя в localStorage
     localStorage.setItem('lifeTrackerUserId', result.user.id);
 
     console.log('✅ Вход успешен:', result.user);

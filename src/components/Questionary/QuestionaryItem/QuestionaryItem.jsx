@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-
+import butt from '../../../../public/icons/questionButtonNext.svg';
+import './QuestionaryItem.css';
+import showAlert from '../../../services/showAlert';
 export default function QuestionaryItem({ questInd, addInfo, numOfPage, data }) {
   const [age, setAge] = useState('');
   const [height, setHeight] = useState('');
@@ -7,139 +9,277 @@ export default function QuestionaryItem({ questInd, addInfo, numOfPage, data }) 
   const [gender, setGender] = useState('мужской');
   const [checkedItems, setCheckedItems] = useState([]);
   const [selectedRadio, setSelectedRadio] = useState('');
-
-  const handleCheckboxChange = (event) => {
-    const value = event.target.value;
-    const isChecked = event.target.checked;
-
+  const [checkboxInputWrite, setCheckboxInputWrite] = useState('');
+  const handleCheckboxChange = (itemz) => {
     setCheckedItems((prev) => {
-      if (isChecked) {
-        return [...prev, value];
+      if (!checkedItems.includes(itemz) && checkedItems.length < 3) {
+        return [...prev, itemz];
       } else {
-        return prev.filter((item) => item !== value);
+        return prev.filter((item) => item !== itemz);
       }
     });
   };
 
-  const handleRadioChange = (event) => {
-    setSelectedRadio(event.target.value);
+  const handleRadioChange = (t) => {
+    setSelectedRadio(t);
   };
 
   function nextQuest() {
-    console.log(`📋 Сохраняем данные для: ${data.infoType}`, {
-      selectedRadio,
-      checkedItems,
-      age,
-      height,
-      weight,
-      gender,
-    });
-
     if (data.type === 'baseInfo') {
-      addInfo(data.infoType, [age, height, weight, gender]);
+      if (age.length == 0 || height.length == 0 || weight.length == 0) {
+        showAlert('Все поля должны быть заполнены');
+        return;
+      } else {
+        addInfo(data.infoType, [age, height, weight, gender]);
+      }
     } else if (data.type === 'manyAnswers') {
-      addInfo(data.infoType, checkedItems);
+      if (checkedItems.length == 0 && checkboxInputWrite.length == 0) {
+        showAlert('Выберите хотя бы один из пунктов');
+        return;
+      } else {
+        if (checkboxInputWrite.length > 0) {
+          handleCheckboxChange(checkboxInputWrite);
+          addInfo(data.infoType, [...checkedItems, checkboxInputWrite]);
+        } else {
+          addInfo(data.infoType, checkedItems);
+        }
+      }
     } else if (data.type === 'oneAnswer') {
-      addInfo(data.infoType, selectedRadio);
+      if (selectedRadio.length == 0) {
+        showAlert('Выберите один из пунктов');
+        return;
+      } else {
+        addInfo(data.infoType, selectedRadio);
+      }
     }
 
     if (questInd === 4) {
       setCheckedItems([]);
       setSelectedRadio('');
     } else {
-      numOfPage(questInd + 1);
-      setCheckedItems([]);
-      setSelectedRadio('');
+      if (
+        data.type === 'baseInfo' &&
+        (age.length == 0 || height.length == 0 || weight.length == 0)
+      ) {
+        showAlert('Все поля должны быть заполнены');
+        return;
+      } else {
+        numOfPage(questInd + 1);
+        setCheckedItems([]);
+        setSelectedRadio('');
+      }
     }
   }
 
   return (
     <div>
-      <h2>{data.title}</h2>
-      <span>{data.tag}</span>
-
       {data.type === 'baseInfo' ? (
         <>
           <div className="questionary-item">
-            <div className="questionary-item__question">
-              <input
-                value={age}
-                onChange={(e) => setAge(e.target.value)}
-                placeholder="Сколько вам лет?"
-                type="text"
-              />
-            </div>
-            <div className="questionary-item__question">
-              <input
-                value={height}
-                onChange={(e) => setHeight(e.target.value)}
-                placeholder="Ваш рост"
-                type="text"
-              />
-            </div>
-            <div className="questionary-item__question">
-              <input
-                value={weight}
-                onChange={(e) => setWeight(e.target.value)}
-                placeholder="Ваш вес"
-                type="text"
-              />
-            </div>
-            <div className="questionary-item__question">
-              <p>Ваш пол</p>
-              <button
-                onClick={() => setGender('мужской')}
-                style={{ backgroundColor: gender === 'мужской' ? '#007bff' : '#ccc' }}>
-                мужской
-              </button>
-              <button
-                onClick={() => setGender('женский')}
-                style={{ backgroundColor: gender === 'женский' ? '#007bff' : '#ccc' }}>
-                женский
-              </button>
+            <div className="questionary-item__container">
+              <div className="questionary-item__nav">
+                <div className="questionary-item__tag">
+                  <p className="questionary-item__tag-text">{data.tag}</p>
+                </div>
+                <div className="questionary-item__nav-button">
+                  {/* <p
+                    onClick={() => numOfPage(questInd - 1)}
+                    className="questionary-item__nav-button-text">
+                    Назад
+                  </p> */}
+                </div>
+              </div>
+              <div className="questionary-item__questions">
+                <p className="questionary-item__title">{data.title}</p>
+                <div className="questionary-item__question">
+                  <input
+                    className="questionary-item__question-input"
+                    value={age}
+                    onChange={(e) => setAge(e.target.value.replace(/[^0-9]/g, ''))}
+                    placeholder="Сколько вам лет?"
+                    type="text"
+                  />
+                </div>
+                <div className="questionary-item__question">
+                  <input
+                    className="questionary-item__question-input"
+                    value={height}
+                    onChange={(e) => setHeight(e.target.value.replace(/[^0-9]/g, ''))}
+                    placeholder="Ваш рост"
+                    type="text"
+                  />
+                </div>
+                <div className="questionary-item__question">
+                  <input
+                    className="questionary-item__question-input"
+                    value={weight}
+                    onChange={(e) => setWeight(e.target.value.replace(/[^0-9]/g, ''))}
+                    placeholder="Ваш вес"
+                    type="text"
+                  />
+                </div>
+                <div className="questionary-item__question">
+                  <div className="questionary-item__question-container">
+                    <p className="questionary-item__question-name">Ваш пол</p>
+                    <div className="questionary-item__question-buttons">
+                      <button
+                        onClick={() => setGender('мужской')}
+                        className="questionary-item__question-button"
+                        style={{ backgroundColor: gender === 'мужской' ? '#F5FF82' : 'black' }}>
+                        <p
+                          className={
+                            gender === 'мужской'
+                              ? 'questionary-item__question-button-text questionary-item__question-button-text--active'
+                              : 'questionary-item__question-button-text'
+                          }>
+                          Мужской{' '}
+                        </p>
+                      </button>
+                      <button
+                        onClick={() => setGender('женский')}
+                        className="questionary-item__question-button"
+                        style={{ backgroundColor: gender === 'женский' ? '#F5FF82' : 'black' }}>
+                        <p
+                          className={
+                            gender === 'женский'
+                              ? 'questionary-item__question-button-text questionary-item__question-button-text--active'
+                              : 'questionary-item__question-button-text'
+                          }>
+                          Женский{' '}
+                        </p>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="questionary-item__questions-button-block">
+                <button onClick={nextQuest} className="questionary-item__questions-button">
+                  <p className="questionary-item__questions-button-text">{data.buttonText}</p>
+                  <img className="questionary-item__questions-button-img" src={butt} alt="" />
+                </button>
+              </div>
             </div>
           </div>
-          <button onClick={nextQuest}>{data.buttonText}</button>
         </>
       ) : data.type === 'manyAnswers' ? (
         <>
           <div className="questionary-item">
-            {data.answers.map((t, i) => (
-              <div key={i}>
-                {' '}
-                <input
-                  value={t}
-                  onChange={handleCheckboxChange}
-                  id={`checkbox-${i}`}
-                  name="checkbox-group"
-                  type="checkbox"
-                  checked={checkedItems.includes(t)}
-                />
-                <label htmlFor={`checkbox-${i}`}>{t}</label>
+            <div className="questionary-item__container">
+              <div className="questionary-item__nav">
+                <div className="questionary-item__tag">
+                  <p className="questionary-item__tag-text">{data.tag}</p>
+                </div>
+                <div className="questionary-item__nav-button">
+                  <p
+                    onClick={() => numOfPage(questInd - 1)}
+                    className="questionary-item__nav-button-text">
+                    Назад
+                  </p>
+                </div>
               </div>
-            ))}
+              <div className="questionary-item__answers">
+                <p className="questionary-item__title">{data.title}</p>
+                {data.answers.map((t, i) => (
+                  <div
+                    onClick={() => handleCheckboxChange(t)}
+                    className={
+                      checkedItems.includes(t)
+                        ? 'questionary-item__answer questionary-item__answer--active'
+                        : 'questionary-item__answer'
+                    }
+                    key={i}>
+                    <input
+                      value={t}
+                      id={`checkbox-${i}`}
+                      name="checkbox-group"
+                      type="checkbox"
+                      checked={checkedItems.includes(t)}
+                      className="questionary-item__answer-input"
+                    />
+                    <p
+                      className={
+                        checkedItems.includes(t)
+                          ? 'questionary-item__answer-text questionary-item__answer-text--active'
+                          : 'questionary-item__answer-text'
+                      }>
+                      {t}
+                    </p>
+                  </div>
+                ))}
+                {data.infoType == 'habits' && (
+                  <div className={'questionary-item__answer'}>
+                    <input
+                      onChange={(e) => setCheckboxInputWrite(e.target.value)}
+                      placeholder="Свой вариант (впишите)"
+                      className="questionary-item__answer-input-write"
+                      type="text"
+                    />
+                  </div>
+                )}
+              </div>
+              <div className="questionary-item__questions-button-block">
+                <button onClick={nextQuest} className="questionary-item__questions-button">
+                  <p className="questionary-item__questions-button-text">{data.buttonText}</p>
+                  <img className="questionary-item__questions-button-img" src={butt} alt="" />
+                </button>
+              </div>
+            </div>
           </div>
-          <button onClick={nextQuest}>{data.buttonText}</button>
         </>
       ) : (
         <>
           <div className="questionary-item">
-            {data.answers.map((t, i) => (
-              <div key={i}>
-                {' '}
-                <input
-                  value={t}
-                  onChange={handleRadioChange}
-                  id={`radio-${i}`}
-                  name="radio-group"
-                  type="radio"
-                  checked={selectedRadio === t}
-                />
-                <label htmlFor={`radio-${i}`}>{t}</label>
+            <div className="questionary-item__container">
+              <div className="questionary-item__nav">
+                <div className="questionary-item__tag">
+                  <p className="questionary-item__tag-text">{data.tag}</p>
+                </div>
+                <div className="questionary-item__nav-button">
+                  <p
+                    onClick={() => numOfPage(questInd - 1)}
+                    className="questionary-item__nav-button-text">
+                    Назад
+                  </p>
+                </div>
               </div>
-            ))}
+              <div className="questionary-item__answers">
+                <p className="questionary-item__title">{data.title}</p>
+                {data.answers.map((t, i) => (
+                  <div
+                    onClick={() => handleRadioChange(t.main)}
+                    className={
+                      selectedRadio == t.main
+                        ? 'questionary-item__answer questionary-item__answer--row questionary-item__answer--active'
+                        : 'questionary-item__answer questionary-item__answer--row '
+                    }
+                    key={i}>
+                    <p
+                      className={
+                        selectedRadio == t.main
+                          ? 'questionary-item__answer-text questionary-item__answer-text--active'
+                          : 'questionary-item__answer-text'
+                      }>
+                      {t.main}
+                    </p>
+                    <p
+                      className={
+                        selectedRadio == t.main
+                          ? 'questionary-item__answer-text questionary-item__answer-text--mini questionary-item__answer-text--active'
+                          : 'questionary-item__answer-text questionary-item__answer-text--mini'
+                      }>
+                      {t.details}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div className="questionary-item__questions-button-block">
+                <button onClick={nextQuest} className="questionary-item__questions-button">
+                  <p className="questionary-item__questions-button-text">{data.buttonText}</p>
+                  <img className="questionary-item__questions-button-img" src={butt} alt="" />
+                </button>
+              </div>
+            </div>
           </div>
-          <button onClick={nextQuest}>{data.buttonText}</button>
         </>
       )}
     </div>
