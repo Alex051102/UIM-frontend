@@ -34,14 +34,13 @@ const registerWithSurvey = async (surveyData) => {
       throw new Error(result.error || 'Ошибка регистрации');
     }
 
-    // Сохраняем пользователя в localStorage
     localStorage.setItem('lifeTrackerUserId', result.user.id);
 
     console.log('✅ Регистрация успешна:', result.user);
     return result;
   } catch (error) {
     console.error('💥 Ошибка регистрации:', error);
-    throw error; // Пробрасываем ошибку дальше
+    throw error;
   }
 };
 export default registerWithSurvey;
