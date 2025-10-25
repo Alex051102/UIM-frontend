@@ -38,7 +38,7 @@ function App() {
 
   return (
     <>
-      <div style={{ maxWidth: '500px', overflow: 'visible' }} className="app">
+      <div style={{ maxWidth: '600px', overflow: 'visible' }} className="app">
         {auth ? (
           <>
             <button onClick={removeUserFromStorage}>выйти</button>

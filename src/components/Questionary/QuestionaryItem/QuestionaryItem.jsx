@@ -164,7 +164,12 @@ export default function QuestionaryItem({ questInd, addInfo, numOfPage, data }) 
       ) : data.type === 'manyAnswers' ? (
         <>
           <div className="questionary-item">
-            <div className="questionary-item__container">
+            <div
+              className={
+                data.infoType == 'habits'
+                  ? 'questionary-item__container questionary-item__container--gap-min'
+                  : 'questionary-item__container'
+              }>
               <div className="questionary-item__nav">
                 <div className="questionary-item__tag">
                   <p className="questionary-item__tag-text">{data.tag}</p>
