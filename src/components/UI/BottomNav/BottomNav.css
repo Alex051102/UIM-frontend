@@ -1,0 +1,19 @@
+.bottom-nav-wrap{
+    background-color: grey;
+    border-radius: 20px;
+    width: 100%;
+}
+.botton-nav{
+    padding: 10px;
+   
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+}
+.bottom-nav__item{
+    display: flex;
+    justify-content: center;
+}
+.bottom-nav__item img{
+    width:29px;
+    height:29px;
+}

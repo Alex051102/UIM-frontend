@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AuthStart from './components/Auth/AuthStart/AuthStart';
+import Main from './components/App/Main/Main';
 
 function App() {
   const [auth, setAuth] = useState(false);
@@ -41,8 +42,8 @@ function App() {
       <div style={{ overflow: 'hidden', maxWidth: '600px', height: '100vh' }} className="app">
         {auth ? (
           <>
-            <button onClick={removeUserFromStorage}>выйти</button>
-            <p>LK</p>
+            {/* <button onClick={removeUserFromStorage}>выйти</button> */}
+            <Main></Main>
           </>
         ) : (
           <AuthStart onLoginSuccess={() => setAuth(true)} />
