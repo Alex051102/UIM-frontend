@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import './Home.css';
 import avatar from '../../../assets/avatar.png';
 import locked from '../../../assets/locked.svg';
+import arrow from '../../../assets/foodArrow.svg';
 export default function Home() {
   const [isPro, setIsPro] = useState(false);
   return (
     <>
-      homee
       <div className="home">
         <div className="home__info">
           <div className="home__info-stats-wrap">
@@ -31,7 +31,11 @@ export default function Home() {
                 </div>
               </div>
               <div className="home__info-buttons">
-                <button className="home__info-button home__info-button--progress">Прогресс</button>
+                <button
+                  onClick={() => setIsPro((c) => !c)}
+                  className="home__info-button home__info-button--progress">
+                  Прогресс
+                </button>
                 <button className="home__info-button">Пригласить друга</button>
               </div>
             </div>
@@ -83,9 +87,117 @@ export default function Home() {
                     </div>
                   </>
                 ) : (
-                  ''
+                  <div className="home__info-progress-top-wrap">
+                    <div className="home__info-progress-top">
+                      <div className="home__info-progress-top-info">
+                        <div className="home__info-progress-top-logo-wrap">
+                          <div className="home__info-progress-top-logo">
+                            <p className="home__info-progress-top-logo-text">UIM pro</p>
+                          </div>
+                        </div>
+                        <div className="home__info-progress-top-descr">
+                          <h2 className="home__info-progress-top-descr-title">Прогресс</h2>
+                          <p className="home__info-progress-top-descr-text">
+                            Зарабатывай баллы, попадай в топ и получай подарки от UIM
+                          </p>
+                        </div>
+                      </div>
+                      <div className="home__info-progress-top-cards">
+                        <div className="home__info-progress-top-card-wrap">
+                          <div className="home__info-progress-top-card">
+                            <div className="home__info-progress-top-card-person">
+                              <div className="home__info-progress-top-card-person-avatar-wrap">
+                                <img
+                                  className="home__info-progress-top-card-person-avatar"
+                                  src={avatar}
+                                  alt=""
+                                />
+                              </div>
+
+                              <div className="home__info-progress-top-card-person-text">
+                                <p className="home__info-progress-top-card-person-name">
+                                  Name Surname
+                                </p>
+                                <p className="home__info-progress-top-card-person-days">
+                                  78 дней подряд
+                                </p>
+                              </div>
+                            </div>
+                            <p className="home__info-progress-top-card-points">799</p>
+                          </div>
+                        </div>
+                        <div className="home__info-progress-top-card-wrap">
+                          <div className="home__info-progress-top-card">
+                            <div className="home__info-progress-top-card-person">
+                              <div className="home__info-progress-top-card-person-avatar-wrap">
+                                <img
+                                  className="home__info-progress-top-card-person-avatar"
+                                  src={avatar}
+                                  alt=""
+                                />
+                              </div>
+
+                              <div className="home__info-progress-top-card-person-text">
+                                <p className="home__info-progress-top-card-person-name">
+                                  Name Surname
+                                </p>
+                                <p className="home__info-progress-top-card-person-days">
+                                  78 дней подряд
+                                </p>
+                              </div>
+                            </div>
+                            <p className="home__info-progress-top-card-points">799</p>
+                          </div>
+                        </div>
+
+                        <div className="home__info-progress-top-card-wrap home__info-progress-top-card-wrap--current">
+                          <div className="home__info-progress-top-card">
+                            <div className="home__info-progress-top-card-person">
+                              <div className="home__info-progress-top-card-person-avatar-wrap">
+                                <img
+                                  className="home__info-progress-top-card-person-avatar"
+                                  src={avatar}
+                                  alt=""
+                                />
+                              </div>
+
+                              <div className="home__info-progress-top-card-person-text">
+                                <p className="home__info-progress-top-card-person-name home__info-progress-top-card-person-name--current">
+                                  Вы
+                                  <span className="home__info-progress-top-card-person-name--rating">
+                                    (16 место)
+                                  </span>
+                                </p>
+                                <p className="home__info-progress-top-card-person-days home__info-progress-top-card-person-days--current">
+                                  78 дней подряд
+                                </p>
+                              </div>
+                            </div>
+                            <p className="home__info-progress-top-card-points home__info-progress-top-card-points--current">
+                              799
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 )}
               </div>
+            </div>
+          </div>
+          <div className="home__info-food-wrap">
+            <div className="home__info-food">
+              <div className="home__info-food-main">
+                <p className="home__info-food-text">Состояние | питание</p>
+                <p className="home__info-food-text home__info-food-text--big">
+                  Отслеживай свое состояние на протяжении всего дня
+                </p>
+                <button className="home__info-food-button">
+                  <p>Перейти к дневнику питания</p>
+                  <img className="home__info-food-button-arrow" src={arrow} alt="" />
+                </button>
+              </div>
+              <div className="home__info-food-analyz"></div>
             </div>
           </div>
         </div>
