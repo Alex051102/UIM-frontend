@@ -1,8 +1,8 @@
 .home{
-   
+  
 }
 .home__info{
-    
+   
  display: flex;
     flex-direction: column;
     gap: 10px;
@@ -93,7 +93,7 @@ display: grid;
 .home__info-progress{
     padding: 20px;
     display:grid;
-    grid-template-columns: 50vw 45vw;
+    grid-template-columns: 1.2fr 1fr;
     gap: 10px;
 }
 .home__info-progress-help-wrap{
@@ -314,7 +314,7 @@ display: grid;
 }
 .home__info-food{
     display: grid;
-    grid-template-columns: 48vw 43vw;
+    grid-template-columns: 1fr 1fr;
     padding: 10px 20px;
     gap: 30px;
 }
