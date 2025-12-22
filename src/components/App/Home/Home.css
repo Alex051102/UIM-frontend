@@ -99,7 +99,7 @@ display: grid;
     position: relative;
     padding: 15px;
     display:grid;
-    grid-template-columns: 1.2fr 1fr;
+    grid-template-columns: 1.3fr 1fr;
     gap: 10px;
 }
 .home__info-progress-help-wrap{
@@ -185,6 +185,9 @@ display: grid;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.home__info-progress-button--small{
+    height: 30px;
 }
 .home__info-progress-top-locked{
     background-color: black;
@@ -427,7 +430,7 @@ display: grid;
 
 .home__info-progress-help-wrap{
   
-    height: 230px;
+    height: 195px;
    
 }
 
@@ -444,7 +447,30 @@ display: grid;
 }
 
 }
+@media(max-height:770px){
+    .home__info-stats {
+    padding: 10px;
+    padding-top: 10px;
+   
+    gap: 10px;
+}
 
+.home__info-progress-help {
+    
+    gap: 5px;
+    padding: 10px;
+}
+}
+
+@media(max-height:770px) and (max-width:474px){
+   
+
+.home__info-progress-help {
+    
+    gap: 10px;
+    padding: 10px;
+}
+}
 @media(max-width:486px){
     .home__info-food-text--big {
     font-size: 12px;
