@@ -17,7 +17,7 @@
 }
 .home__info-stats{
     padding: 15px;
-    padding-top: 30px;
+    padding-top: 20px;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -60,6 +60,9 @@ display: grid;
     width: 95px;
     border-radius: 50%;
 }
+
+
+
 .home__info-buttons{
     display: flex;
     gap: 20px;
@@ -68,7 +71,7 @@ display: grid;
 }
 .home__info-button{
     width: 140px;
-    height:35px;
+    height:30px;
     border-radius: 20px;
     background-color: transparent;
     border: 1px solid white;
@@ -84,14 +87,17 @@ display: grid;
     color: black;
 }
 
-
+.home__info-progress-next{
+    display: none;
+}
 .home__info-progress-wrap{
     background-color: grey;
     border-radius: 30px;
     
 }
 .home__info-progress{
-    padding: 20px;
+    position: relative;
+    padding: 15px;
     display:grid;
     grid-template-columns: 1.2fr 1fr;
     gap: 10px;
@@ -102,11 +108,17 @@ display: grid;
     height: 270px;
    
 }
+
+
+
+
+
+
 .home__info-progress-help{
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    padding: 20px 15px;
+    gap: 10px;
+    padding: 15px 10px;
     
 
 }
@@ -131,8 +143,13 @@ display: grid;
     border-radius: 50%;
 }
 
+
+
+
+
+
 .home__info-progress-user-text{
-    font-size: 11px;
+    font-size: 12px;
     color: #1C1B1B;
     text-align: center;
 
@@ -141,14 +158,21 @@ display: grid;
     font-size: 14px;
     color:#1A1919
 }
+
+
+
+
+
 .home__info-progress-button-wrap{
     display: flex;
     justify-content: center;
     padding-top: 10px;
 }
 .home__info-progress-buttons-wrap{
-    display: flex;
-    flex-direction: column;
+    width: 100%;
+   display: grid;
+   grid-template-rows: 1fr 1fr 1fr;
+  
     gap: 10px;
 }
 .home__info-progress-button{
@@ -333,7 +357,7 @@ display: grid;
 .home__info-food-button{
     width: 100%;
     border-radius: 20px;
-    height: 45px;
+    height: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -352,8 +376,185 @@ display: grid;
     background-color: black;
     border-radius: 20px;
 }
+
+
+
+
 .home__info-food-text--big{
-    font-size: 16px;
+    font-size: 15px;
  
     color: black;
+}
+
+
+.home__info-progress-help-wrap--none{
+    display: none;
+}
+.home__info-progress-top-wrap--none{
+    display: none;
+}
+
+
+@media(max-height:850px){
+    .home__info-food-analyz{
+    height: 170px;
+    background-color: black;
+    border-radius: 20px;
+}
+
+.home__info-progress-user-text{
+    font-size: 10px;
+    color: #1C1B1B;
+    text-align: center;
+
+}
+.home__info-progress-user-text--big{
+    font-size: 13px;
+    color:#1A1919
+}
+
+.home__info-progress-user-avatar-wrap{
+   
+    height: 40px;
+    width:40px;
+    
+}
+.home__info-progress-user-avatar{
+    height: 35px;
+    width: 35px;
+    
+}
+
+.home__info-progress-help-wrap{
+  
+    height: 230px;
+   
+}
+
+.home__info-avatar-wrap{
+   
+    height: 80px;
+    width: 80px;
+    
+}
+.home__info-avatar{
+    height: 75px;
+    width: 75px;
+   
+}
+
+}
+
+@media(max-width:486px){
+    .home__info-food-text--big {
+    font-size: 12px;
+   
+}
+.home__info-food-button {
+   
+    height: 35px;
+    
+    font-size: 10px;
+}
+}
+@media(max-width:474px){
+    .home__info-progress-button-wrap {
+   
+    padding-top: 0px;
+}
+.home__info-progress-next{
+    display: flex;
+    justify-content: end
+    ;
+}
+.home__info-progress-next-button{
+    width: 30px;
+    height: 15px;
+    background-color: red;
+    font-size: 12px;
+    position: absolute;
+    top: 20px;
+    right: 30px;
+}
+.home__info-progress {
+    
+    grid-template-columns: 1fr;
+    gap: 5px;
+}
+.home__info-progress-button {
+    width: 200px;
+    height: 40px;
+}
+
+.home__info-progress-user-text{
+    font-size: 13px;
+  
+
+}
+.home__info-progress-user-text--big{
+    font-size: 16px;
+   
+}
+
+.home__info-progress-user-avatar-wrap{
+   
+    height: 50px;
+    width:50px;
+    
+}
+.home__info-progress-user-avatar{
+    height: 45px;
+    width: 45px;
+    
+}
+/* .home__info-progress-user-text {
+    font-size: 13px;
+   
+}
+.home__info-progress-user-text--big {
+    font-size: 16px;
+
+}
+.home__info-progress-user-avatar {
+    height: 55px;
+    width: 55px;
+  
+}
+.home__info-progress-user-avatar-wrap {
+   
+    height: 60px;
+    width: 60px;
+   
+} */
+ .home__info-progress-user {
+   flex-direction: row;
+   justify-content: center;
+}
+.home__info-progress-help-wrap {
+    
+    height: 210px;
+}
+.home__info-progress-top-locked {
+    height: 210px;
+}
+
+.home__info-progress-buttons-wrap {
+   justify-content: center;
+   grid-template-columns: 1fr 1fr;
+  
+  
+}
+.home__info-progress-button--small{
+   
+    width: 100%;
+}
+.hh{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    grid-column-start: 1;
+    grid-column-end: 3
+    ;
+}
+
 }

@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Home.css';
 import avatar from '../../../assets/avatar.png';
 import locked from '../../../assets/locked.svg';
 import arrow from '../../../assets/foodArrow.svg';
 export default function Home() {
   const [isPro, setIsPro] = useState(false);
+  const width = window.innerWidth;
+  const [buttonNext, setButtonNext] = useState('two');
+  useEffect(() => {
+    if (width < 474) {
+      setButtonNext('help');
+    }
+  }, []);
+
+  console.log(buttonNext);
   return (
     <>
       <div className="home">
@@ -42,7 +51,22 @@ export default function Home() {
           </div>
           <div className="home__info-progress-wrap">
             <div className="home__info-progress">
-              <div className="home__info-progress-help-wrap">
+              <div className="home__info-progress-next">
+                <div
+                  onClick={() =>
+                    buttonNext == 'help' ? setButtonNext('top') : setButtonNext('help')
+                  }
+                  className="home__info-progress-next-button">
+                  next
+                </div>
+              </div>
+
+              <div
+                className={
+                  buttonNext == 'top'
+                    ? 'home__info-progress-help-wrap--none'
+                    : 'home__info-progress-help-wrap'
+                }>
                 <div className="home__info-progress-help">
                   <div className="home__info-progress-user">
                     <div className="home__info-progress-user-avatar-wrap">
@@ -60,21 +84,34 @@ export default function Home() {
                         Узнавай больше о качественном образе жизни
                       </p>
                       <div className="home__info-progress-button-wrap">
-                        <button className="home__info-progress-button home__info-progress-button--big">
+                        <button className="home__info-progress-button">
                           Перейти на UIM.PRO 249 ₽/мес
                         </button>
                       </div>
                     </>
                   ) : (
                     <div className="home__info-progress-buttons-wrap">
-                      <button className="home__info-progress-button">UIM.COMMUNITY</button>
-                      <button className="home__info-progress-button">Обменять баллы</button>
-                      <button className="home__info-progress-button">Задать вопрос UIM.mind</button>
+                      <button className="home__info-progress-button home__info-progress-button--small">
+                        UIM.COMMUNITY
+                      </button>
+                      <button className="home__info-progress-button home__info-progress-button--small">
+                        Обменять баллы
+                      </button>
+                      <div className="hh">
+                        <button className="home__info-progress-button home__info-progress-button--small home__info-progress-button--center">
+                          Задать вопрос UIM.mind
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
               </div>
-              <div className="home__info-progress-top-wrap">
+              <div
+                className={
+                  buttonNext == 'help'
+                    ? 'home__info-progress-top-wrap--none'
+                    : '"home__info-progress-top-wrap"'
+                }>
                 {isPro == false ? (
                   <>
                     <div className="home__info-progress-top-locked">
