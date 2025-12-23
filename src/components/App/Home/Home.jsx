@@ -3,6 +3,12 @@ import './Home.css';
 import avatar from '../../../assets/avatar.png';
 import locked from '../../../assets/locked.svg';
 import arrow from '../../../assets/foodArrow.svg';
+
+import backFood from '../../../assets/backFood.png';
+import backHelp from '../../../assets/backHelp.png';
+import backInfo from '../../../assets/backInfo.png';
+import backTop from '../../../assets/backTop.png';
+import backMiddle from '../../../assets/backMiddle.png';
 export default function Home() {
   const [isPro, setIsPro] = useState(false);
   const width = window.innerWidth;
@@ -18,7 +24,9 @@ export default function Home() {
     <>
       <div className="home">
         <div className="home__info">
-          <div className="home__info-stats-wrap">
+          <div
+            style={{ background: `url(${backInfo}) center/cover no-repeat` }}
+            className="home__info-stats-wrap">
             <div className="home__info-stats">
               <div className="home__info-stats-main">
                 <div className="home__info-stats-main-item">
@@ -36,7 +44,13 @@ export default function Home() {
                 </div>
                 <div className="home__info-stats-main-item home__info-stats-main-item--down">
                   <p className="home__info-text">Name Surname</p>
-                  <p className="home__info-text home__info-text--small">Статус : Light</p>
+                  {isPro == false ? (
+                    <p className="home__info-text home__info-text--small">Статус : Light</p>
+                  ) : (
+                    <p className="home__info-text home__info-text--small">
+                      Статус : <span className="home__info-text--pro">Pro</span>
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="home__info-buttons">
@@ -49,7 +63,9 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="home__info-progress-wrap">
+          <div
+            style={{ background: `url(${backMiddle}) center/cover no-repeat` }}
+            className="home__info-progress-wrap">
             <div className="home__info-progress">
               <div className="home__info-progress-next">
                 <div
@@ -62,6 +78,7 @@ export default function Home() {
               </div>
 
               <div
+                style={{ background: `url(${backHelp}) center/cover no-repeat` }}
                 className={
                   buttonNext == 'top'
                     ? 'home__info-progress-help-wrap--none'
@@ -114,7 +131,9 @@ export default function Home() {
                 }>
                 {isPro == false ? (
                   <>
-                    <div className="home__info-progress-top-locked">
+                    <div
+                      style={{ background: `url(${backTop}) center/cover no-repeat` }}
+                      className="home__info-progress-top-locked">
                       <div className="home__info-progress-top-locked-content">
                         <img className="home__info-progress-top-locked-img" src={locked} alt="" />
                         <div className="home__info-progress-top-locked-points-wrap">
@@ -124,7 +143,9 @@ export default function Home() {
                     </div>
                   </>
                 ) : (
-                  <div className="home__info-progress-top-wrap">
+                  <div
+                    style={{ background: `url(${backTop}) center/cover no-repeat` }}
+                    className="home__info-progress-top-normal">
                     <div className="home__info-progress-top">
                       <div className="home__info-progress-top-info">
                         <div className="home__info-progress-top-logo-wrap">
@@ -222,7 +243,9 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="home__info-food-wrap">
+          <div
+            style={{ background: `url(${backFood}) center/cover no-repeat` }}
+            className="home__info-food-wrap">
             <div className="home__info-food">
               <div className="home__info-food-main">
                 <p className="home__info-food-text">Состояние | питание</p>
