@@ -9,6 +9,7 @@ import backHelp from '../../../assets/backHelp.png';
 import backInfo from '../../../assets/backInfo.png';
 import backTop from '../../../assets/backTop.png';
 import backMiddle from '../../../assets/backMiddle.png';
+import { Link } from 'react-router-dom';
 export default function Home() {
   const [isPro, setIsPro] = useState(false);
   const width = window.innerWidth;
@@ -111,9 +112,11 @@ export default function Home() {
                       <button className="home__info-progress-button home__info-progress-button--small">
                         UIM.COMMUNITY
                       </button>
-                      <button className="home__info-progress-button home__info-progress-button--small">
+                      <Link to='/shop'>
+                       <button className="home__info-progress-button home__info-progress-button--small">
                         Обменять баллы
-                      </button>
+                      </button></Link>
+                     
                       <div className="hh">
                         <button className="home__info-progress-button home__info-progress-button--small home__info-progress-button--center">
                           Задать вопрос UIM.mind

@@ -7,6 +7,7 @@ import Finance from '../Finance/Finance';
 import BottomNav from '../../UI/BottomNav/BottomNav';
 import './Main.css';
 import homeBack from '../../../assets/homeBack.png';
+import Shop from '../Shop/Shop';
 export default function Main() {
   return (
     <>
@@ -20,6 +21,7 @@ export default function Main() {
               <Route path="/habits" element={<Habits></Habits>}></Route>
               <Route path="/food" element={<Food></Food>}></Route>
               <Route path="/finance" element={<Finance></Finance>}></Route>
+              <Route path="/shop" element={<Shop></Shop>}></Route>
             </Routes>
           </div>
 
