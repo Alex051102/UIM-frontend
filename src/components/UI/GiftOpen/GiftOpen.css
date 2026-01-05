@@ -1,0 +1,30 @@
+.gift-open-wrap{
+    background-color: #3F3A38;
+    border-radius: 20px;
+}
+.gift-open{
+    padding: 11px 15px;
+    display: grid;
+    grid-template-rows:45px 12fr 45px;
+}
+
+
+.gift-open__title{
+    font-size: 28px;
+    color: #F5FF82;
+}
+.gift-open__main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+}
+.gift-open__code{
+      font-size: 32px;
+    color: #F5FF82;
+}
+.gift-open__time{
+    color:#FFFFFD;
+    font-size: 12px;
+}

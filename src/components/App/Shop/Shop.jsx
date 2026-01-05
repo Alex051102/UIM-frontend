@@ -15,6 +15,9 @@ import gift2 from '../../../assets/gift2.png';
 import gift3 from '../../../assets/gift3.png';
 import gift4 from '../../../assets/gift4.png';
 import backGifts from '../../../assets/backGifts.png';
+import GiftInfo from '../../UI/GiftInfo/GiftInfo';
+import GiftNotEnough from '../../UI/GiftNotEnough/GiftNotEnough';
+import GiftOpen from '../../UI/GiftOpen/GiftOpen';
 export default function Points() {
   const exercises = [
     {
@@ -48,28 +51,54 @@ export default function Points() {
       image: gift1,
       title: 'Скидка 70% на покупку',
       text: 'Промокод на скидку 70% в магазине IRNBY ',
+      descr:
+        'Чтобы получить скидку, просто предъявите промокод на кассе, и стоимость автоматически уменьшится. Предложение действует на весь ассортимент: одежду, обувь, аксессуары и спортивное оборудование. Успей воспользоваться выгодой — количество товаров по акции ограничено',
       points: 1500,
+      code: '123g234y3u4',
+      time: '2 месяца',
     },
     {
       image: gift2,
       title: 'Бесплатное посещение SKY',
       text: 'Бесплатное посещение занятия в клубе SKY',
+      descr:
+        'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nostrum animi laborum molestiae eos dolorum saepe in unde magni quisquam recusandae. Possimus perspiciatis ducimus temporibus repellat distinctio sint, itaque dolorum ullam?',
       points: 1500,
+      code: '3FRGFJ3u4',
+      time: '15 дней',
     },
     {
       image: gift3,
       title: 'Бесплатное посещение YOG',
       text: 'Бесплатное посещение занятия на любое направление',
+      descr:
+        'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nostrum animi laborum molestiae eos dolorum saepe in unde magni quisquam recusandae. Possimus perspiciatis ducimus temporibus repellat distinctio sint, itaque dolorum ullam?',
       points: 1500,
+      code: '3767676767UHFJ3u4',
+      time: '1 год',
     },
     {
       image: gift4,
       title: 'Скидка 25% на одежду бренда',
       text: 'Промокод на скидку 25% в магазине 12stories',
+      descr:
+        'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nostrum animi laborum molestiae eos dolorum saepe in unde magni quisquam recusandae. Possimus perspiciatis ducimus temporibus repellat distinctio sint, itaque dolorum ullam?',
       points: 1500,
+      code: '3234KK0au4',
+      time: '4 месяца',
     },
   ];
   const [giftActive, setGiftActive] = useState(true);
+
+  const [giftState, setGiftState] = useState('info');
+  const [indexOfChoosen, setIndexOfChoosen] = useState(-1);
+  let currrentPoints = 1700;
+  function setterGiftState(state) {
+    setGiftState(state);
+  }
+  function exitGiftInfo() {
+    setIndexOfChoosen(-1);
+  }
   return (
     <>
       <div className="shop-wrap">
@@ -151,16 +180,38 @@ export default function Points() {
                   ))}
                 </div>
               </div>
-            ) : (
+            ) : indexOfChoosen == -1 ? (
               <div
                 style={{ background: `url(${backGifts}) center/cover no-repeat` }}
                 className="shop__gifts-wrap">
                 <div className="shop__gifts">
-                  {gifts.map((g) => (
-                    <Gift image={g.image} title={g.title} text={g.text} points={g.points}></Gift>
+                  {gifts.map((g, ind) => (
+                    <div onClick={() => setIndexOfChoosen(ind)}>
+                      <Gift image={g.image} title={g.title} text={g.text} points={g.points}></Gift>
+                    </div>
                   ))}
                 </div>
               </div>
+            ) : giftState == 'info' ? (
+              <GiftInfo
+                image={gifts[indexOfChoosen].image}
+                title={gifts[indexOfChoosen].title}
+                text={gifts[indexOfChoosen].text}
+                descr={gifts[indexOfChoosen].descr}
+                points={gifts[indexOfChoosen].points}
+                isEnough={currrentPoints >= gifts[indexOfChoosen].points}
+                setterGiftState={setterGiftState}
+                exitGiftInfo={exitGiftInfo}></GiftInfo>
+            ) : giftState == 'notEnough' ? (
+              <GiftNotEnough
+                current={currrentPoints}
+                notEnough={gifts[indexOfChoosen].points - currrentPoints}
+                setterGiftState={setterGiftState}></GiftNotEnough>
+            ) : (
+              <GiftOpen
+                code={gifts[indexOfChoosen].code}
+                time={gifts[indexOfChoosen].time}
+                setterGiftState={setterGiftState}></GiftOpen>
             )}
           </div>
         </div>
